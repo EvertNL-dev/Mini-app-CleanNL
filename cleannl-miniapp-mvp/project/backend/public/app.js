@@ -4,6 +4,24 @@ if (tg) {
   tg.expand();
 }
 
+// Alleen mobiel toestaan — Telegram Desktop/macOS/webversie krijgen een melding i.p.v. de shop.
+const MOBILE_PLATFORMS = ["ios", "android", "android_x"];
+const isMobile = tg && MOBILE_PLATFORMS.includes(tg.platform);
+
+if (!isMobile) {
+  document.body.innerHTML = `
+    <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; text-align:center;">
+      <div>
+        <p style="font-family:'Permanent Marker', cursive; font-size:24px; margin:0 0 12px 0; text-shadow:0 0 18px rgba(255,106,26,0.35);">Clean NL</p>
+        <p style="color:#8f8a83; font-size:14px; line-height:1.5; max-width:280px; margin:0 auto;">
+          Deze winkel is alleen te bekijken via de Telegram-app op je telefoon. Open de bot op je mobiel om verder te gaan.
+        </p>
+      </div>
+    </div>
+  `;
+  throw new Error("Mini-app alleen toegestaan op mobiel — desktop/web geblokkeerd.");
+}
+
 // Zelfde origin als de backend (server.js serveert deze map), dus relatief pad
 const API_BASE = "/api";
 
