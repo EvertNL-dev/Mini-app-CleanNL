@@ -61,6 +61,108 @@ async function enterAdmin() {
   adminScreen.classList.remove("hidden");
 }
 
+// ---- Tabbladen ----
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const tab = btn.dataset.tab;
+    document.getElementById("tab-products").classList.toggle("hidden", tab !== "products");
+    document.getElementById("tab-bot").classList.toggle("hidden", tab !== "bot");
+    document.getElementById("addProductBtn").classList.toggle("hidden", tab !== "products");
+    document.getElementById("pageTitle").textContent = tab === "products" ? "Producten" : "Bot";
+
+    if (tab === "bot") loadBotTab();
+  };
+});
+
+async function loadBotTab() {
+  await Promise.all([loadBotSettings(), loadBotUsers()]);
+}
+
+// ---- Bot-instellingen ----
+async function loadBotSettings() {
+  const res = await fetch(`${API_BASE}/admin/bot-settings`, { headers: authHeaders() });
+  const settings = await res.json();
+  document.getElementById("bot_welcomeText").value = settings.welcomeText || "";
+  document.getElementById("bot_logoUrl").value = settings.logoUrl || "";
+  document.getElementById("bot_contactTelegramUrl").value = settings.contactTelegramUrl || "";
+  document.getElementById("bot_contactSignalUrl").value = settings.contactSignalUrl || "";
+  document.getElementById("bot_contactThreemaUrl").value = settings.contactThreemaUrl || "";
+  document.getElementById("bot_socialInstagramUrl").value = settings.socialInstagramUrl || "";
+}
+
+document.getElementById("saveBotSettingsBtn").onclick = async () => {
+  const body = {
+    welcomeText: document.getElementById("bot_welcomeText").value.trim(),
+    logoUrl: document.getElementById("bot_logoUrl").value.trim(),
+    contactTelegramUrl: document.getElementById("bot_contactTelegramUrl").value.trim(),
+    contactSignalUrl: document.getElementById("bot_contactSignalUrl").value.trim(),
+    contactThreemaUrl: document.getElementById("bot_contactThreemaUrl").value.trim(),
+    socialInstagramUrl: document.getElementById("bot_socialInstagramUrl").value.trim()
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/bot-settings`, {
+      method: "PUT",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error((await res.json()).error || "Opslaan mislukt.");
+    showStatus("Bot-instellingen opgeslagen.");
+  } catch (err) {
+    showStatus(err.message, true);
+  }
+};
+
+// ---- Bot-gebruikers ----
+async function loadBotUsers() {
+  const res = await fetch(`${API_BASE}/admin/bot-users`, { headers: authHeaders() });
+  const users = await res.json();
+
+  document.getElementById("userCount").textContent = `(${users.length})`;
+
+  const tbody = document.getElementById("botUserTableBody");
+  tbody.innerHTML = "";
+  users.forEach(u => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${u.firstName || "-"}</td>
+      <td>${u.username ? "@" + u.username : "-"}</td>
+      <td>${u.chatId}</td>
+      <td>${new Date(u.createdAt).toLocaleDateString("nl-NL")}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ---- Broadcast ----
+document.getElementById("sendBroadcastBtn").onclick = async () => {
+  const message = document.getElementById("broadcastMessage").value.trim();
+  if (!message) { alert("Typ eerst een bericht."); return; }
+  if (!confirm("Weet je zeker dat je dit bericht naar alle gebruikers wilt sturen?")) return;
+
+  const broadcastStatus = document.getElementById("broadcastStatus");
+  broadcastStatus.classList.remove("hidden");
+  broadcastStatus.textContent = "Bezig met versturen...";
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/broadcast`, {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ message })
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || "Versturen mislukt.");
+
+    broadcastStatus.textContent = `Verstuurd: ${result.success}. Mislukt: ${result.failed}. (van ${result.total} gebruikers)`;
+    document.getElementById("broadcastMessage").value = "";
+  } catch (err) {
+    broadcastStatus.textContent = "Fout: " + err.message;
+  }
+};
+
 // ---- Producten laden ----
 async function loadProducts() {
   const res = await fetch(`${API_BASE}/admin/products`, { headers: authHeaders() });
