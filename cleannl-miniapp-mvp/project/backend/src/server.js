@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const adminRoutes = require("./routes/admin");
 const prisma = require("./lib/prisma");
+const { startBot } = require("./bot");
 
 const app = express();
 
@@ -50,5 +51,6 @@ bootstrapAdmin()
   .finally(() => {
     app.listen(PORT, () => {
       console.log(`Server draait op poort ${PORT}`);
+      startBot(); // Telegram-bot draait als los onderdeel binnen hetzelfde proces
     });
   });
