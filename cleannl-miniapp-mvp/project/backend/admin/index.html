@@ -22,26 +22,71 @@
 
 <div id="adminScreen" class="admin-screen hidden">
   <header class="admin-header">
-    <h1>Producten</h1>
+    <h1 id="pageTitle">Producten</h1>
     <div>
       <button id="addProductBtn" class="btn-primary">+ Nieuw product</button>
       <button id="logoutBtn" class="btn-secondary">Uitloggen</button>
     </div>
   </header>
 
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="products">Producten</button>
+    <button class="tab-btn" data-tab="bot">Bot</button>
+  </nav>
+
   <div id="statusMsg" class="status-msg hidden"></div>
 
-  <table class="product-table">
-    <thead>
-      <tr><th>Foto</th><th>Naam</th><th>Categorie</th><th>Prijs</th><th>Actief</th><th></th></tr>
-    </thead>
-    <tbody id="productTableBody"></tbody>
-  </table>
+  <div id="tab-products" class="tab-panel">
+    <table class="product-table">
+      <thead>
+        <tr><th>Foto</th><th>Naam</th><th>Categorie</th><th>Prijs</th><th>Actief</th><th></th></tr>
+      </thead>
+      <tbody id="productTableBody"></tbody>
+    </table>
+  </div>
+
+  <div id="tab-bot" class="tab-panel hidden">
+    <div class="bot-section">
+      <h2>Welkomstbericht &amp; links</h2>
+      <label>Welkomsttekst (bij /start)</label>
+      <textarea id="bot_welcomeText" rows="4"></textarea>
+      <label>Logo-URL (Cloudinary)</label>
+      <input id="bot_logoUrl" placeholder="https://res.cloudinary.com/...">
+      <label>Contact — Telegram</label>
+      <input id="bot_contactTelegramUrl" placeholder="https://t.me/jouw_username">
+      <label>Contact — Signal</label>
+      <input id="bot_contactSignalUrl" placeholder="https://signal.me/#p/+31...">
+      <label>Contact — Threema</label>
+      <input id="bot_contactThreemaUrl" placeholder="https://threema.id/...">
+      <label>Social — Instagram</label>
+      <input id="bot_socialInstagramUrl" placeholder="https://instagram.com/...">
+      <button id="saveBotSettingsBtn" class="btn-primary">Opslaan</button>
+    </div>
+
+    <div class="bot-section">
+      <h2>Bericht naar alle gebruikers</h2>
+      <label>Bericht</label>
+      <textarea id="broadcastMessage" rows="3" placeholder="Typ hier je bericht..."></textarea>
+      <button id="sendBroadcastBtn" class="btn-primary">Versturen naar iedereen</button>
+      <p id="broadcastStatus" class="upload-status hidden"></p>
+    </div>
+
+    <div class="bot-section">
+      <h2>Gebruikers <span id="userCount" class="user-count"></span></h2>
+      <table class="product-table">
+        <thead>
+          <tr><th>Naam</th><th>Gebruikersnaam</th><th>Chat-ID</th><th>Sinds</th></tr>
+        </thead>
+        <tbody id="botUserTableBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div id="editModal" class="modal hidden">
   <div class="modal-content">
     <h2 id="editTitle">Product bewerken</h2>
+
 
     <label>Naam</label>
     <input id="f_name">
