@@ -56,3 +56,25 @@ model Media {
   productId    Int
   product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
+
+// Eén rij (singleton) met de instellingen die de bot gebruikt bij /start en de contact-knoppen.
+// Bewerkbaar via het admin panel, zodat hier geen code/redeploy voor nodig is.
+model BotSettings {
+  id                 Int      @id @default(autoincrement())
+  welcomeText        String
+  logoUrl            String?
+  contactTelegramUrl String?
+  contactSignalUrl   String?
+  contactThreemaUrl  String?
+  socialInstagramUrl String?
+  updatedAt          DateTime @updatedAt
+}
+
+// Iedereen die ooit met de bot heeft gepraat — gebruikt voor de gebruikerslijst en broadcasts.
+model BotUser {
+  id        Int      @id @default(autoincrement())
+  chatId    String   @unique
+  username  String?
+  firstName String?
+  createdAt DateTime @default(now())
+}
