@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const prisma = require("../lib/prisma");
 const cloudinary = require("../lib/cloudinary");
 const { requireAdmin } = require("../middleware/auth");
+const { getSettings, sendBroadcast, DEFAULT_SETTINGS } = require("../bot");
 
 const router = express.Router();
 
@@ -167,6 +168,58 @@ router.delete("/media/:id", async (req, res) => {
 
   await prisma.media.delete({ where: { id } });
   res.json({ success: true });
+});
+
+// ---- Bot-instellingen ----
+
+// GET /api/admin/bot-settings — huidige instellingen ophalen (maakt ze aan met defaults als ze nog niet bestaan)
+router.get("/bot-settings", async (req, res) => {
+  const settings = await getSettings();
+  res.json(settings);
+});
+
+// PUT /api/admin/bot-settings — instellingen bijwerken
+router.put("/bot-settings", async (req, res) => {
+  const { welcomeText, logoUrl, contactTelegramUrl, contactSignalUrl, contactThreemaUrl, socialInstagramUrl } = req.body;
+
+  const existing = await prisma.botSettings.findFirst();
+  const data = {
+    welcomeText: welcomeText || DEFAULT_SETTINGS.welcomeText,
+    logoUrl: logoUrl || null,
+    contactTelegramUrl: contactTelegramUrl || null,
+    contactSignalUrl: contactSignalUrl || null,
+    contactThreemaUrl: contactThreemaUrl || null,
+    socialInstagramUrl: socialInstagramUrl || null
+  };
+
+  const settings = existing
+    ? await prisma.botSettings.update({ where: { id: existing.id }, data })
+    : await prisma.botSettings.create({ data });
+
+  res.json(settings);
+});
+
+// ---- Bot-gebruikers ----
+
+// GET /api/admin/bot-users — iedereen die ooit met de bot heeft gepraat
+router.get("/bot-users", async (req, res) => {
+  const users = await prisma.botUser.findMany({ orderBy: { createdAt: "desc" } });
+  res.json(users);
+});
+
+// POST /api/admin/broadcast — bericht sturen naar alle bot-gebruikers
+router.post("/broadcast", async (req, res) => {
+  const { message } = req.body;
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: "Bericht mag niet leeg zijn." });
+  }
+
+  try {
+    const result = await sendBroadcast(message.trim());
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
