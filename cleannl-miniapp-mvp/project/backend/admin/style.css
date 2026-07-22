@@ -234,3 +234,49 @@ button:active { transform: scale(0.97); }
   font-weight: 600;
   margin: -6px 0 12px 0;
 }
+
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  padding: 0 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--hint);
+}
+
+.tab-btn.active {
+  color: var(--accent-bright);
+  border-bottom-color: var(--accent);
+}
+
+.tab-panel.hidden { display: none; }
+
+.bot-section {
+  background: var(--surface);
+  margin: 24px 28px;
+  padding: 22px 24px;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.bot-section h2 {
+  font-size: 15px;
+  margin: 0 0 14px 0;
+}
+
+.user-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hint);
+  text-transform: none;
+}
