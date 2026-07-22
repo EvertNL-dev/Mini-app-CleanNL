@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clean NL — Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>Clean NL Admin</h2>
+    <label>Gebruikersnaam</label>
+    <input id="loginUsername" autocomplete="username">
+    <label>Wachtwoord</label>
+    <input id="loginPassword" type="password" autocomplete="current-password">
+    <button id="loginBtn" class="btn-primary">Inloggen</button>
+    <p id="loginError" class="error hidden"></p>
+  </div>
+</div>
+
+<div id="adminScreen" class="admin-screen hidden">
+  <header class="admin-header">
+    <h1>Producten</h1>
+    <div>
+      <button id="addProductBtn" class="btn-primary">+ Nieuw product</button>
+      <button id="logoutBtn" class="btn-secondary">Uitloggen</button>
+    </div>
+  </header>
+
+  <div id="statusMsg" class="status-msg hidden"></div>
+
+  <table class="product-table">
+    <thead>
+      <tr><th>Foto</th><th>Naam</th><th>Categorie</th><th>Prijs</th><th>Actief</th><th></th></tr>
+    </thead>
+    <tbody id="productTableBody"></tbody>
+  </table>
+</div>
+
+<div id="editModal" class="modal hidden">
+  <div class="modal-content">
+    <h2 id="editTitle">Product bewerken</h2>
+
+    <label>Naam</label>
+    <input id="f_name">
+    <label>Categorie</label>
+    <input id="f_category">
+    <label>Basisprijs</label>
+    <input id="f_price" type="number" step="0.01">
+    <label>Valuta</label>
+    <input id="f_currency" value="EUR">
+    <label>Eenheid</label>
+    <input id="f_unit" placeholder="stuk / kg / m2">
+    <label>Beschrijving</label>
+    <textarea id="f_description" rows="3"></textarea>
+    <label class="checkbox-label"><input type="checkbox" id="f_active" checked> Actief (zichtbaar in mini-app)</label>
+
+    <label>Hoeveelheden / staffelprijzen</label>
+    <div id="quantityRows"></div>
+    <button id="addQuantityBtn" class="btn-secondary small">+ Hoeveelheid toevoegen</button>
+
+    <label>Foto's & video's</label>
+    <div id="mediaGrid" class="media-grid"></div>
+    <input type="file" id="mediaUploadInput" accept="image/*,video/*" multiple style="display:none">
+    <button id="mediaUploadBtn" class="btn-secondary small">+ Media uploaden</button>
+    <p id="uploadStatus" class="upload-status hidden"></p>
+
+    <div class="modal-actions">
+      <button id="saveProductBtn" class="btn-primary">Opslaan</button>
+      <button id="deleteProductBtn" class="btn-danger hidden">Verwijderen</button>
+      <button id="cancelEditBtn" class="btn-secondary">Annuleren</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
