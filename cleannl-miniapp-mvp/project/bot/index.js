@@ -126,5 +126,16 @@ bot.launch().then(() => {
   console.log("Clean NL bot draait via polling...");
 });
 
+// Render (gratis Web Service tier) verwacht dat er een poort open staat, anders faalt de health check.
+// De bot zelf werkt via polling en heeft geen poort nodig — dit is puur een "ik leef nog"-signaal.
+const http = require("http");
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Clean NL bot draait.");
+}).listen(PORT, () => {
+  console.log(`Health-check server luistert op poort ${PORT}`);
+});
+
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
