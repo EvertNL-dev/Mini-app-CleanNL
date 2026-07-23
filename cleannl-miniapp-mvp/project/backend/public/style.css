@@ -30,7 +30,7 @@ body {
 }
 
 .topbar h1 {
-  margin: 0 0 14px 0;
+  margin: 0;
   font-family: 'Permanent Marker', cursive;
   font-size: 26px;
   font-weight: 400;
@@ -38,6 +38,25 @@ body {
   color: var(--text);
   text-shadow: 0 0 18px var(--accent-glow);
 }
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.brand-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
+  flex-shrink: 0;
+}
+
+.brand-logo.hidden { display: none; }
 
 .category-filter {
   display: flex;
