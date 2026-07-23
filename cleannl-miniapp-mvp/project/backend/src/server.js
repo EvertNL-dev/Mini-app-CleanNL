@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const adminRoutes = require("./routes/admin");
+const settingsRoutes = require("./routes/settings");
 const prisma = require("./lib/prisma");
 const { startBot } = require("./bot");
 
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/settings", settingsRoutes);
 
 // Statische hosting: mini-app en admin panel
 app.use("/", express.static(path.join(__dirname, "..", "public")));
