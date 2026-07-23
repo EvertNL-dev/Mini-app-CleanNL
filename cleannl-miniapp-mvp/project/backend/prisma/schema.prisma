@@ -1,10 +1,9 @@
 // Prisma schema
-// Dev: SQLite (geen losse database server nodig, werkt out-of-the-box)
-// Productie: verander provider naar "postgresql" en DATABASE_URL naar je Postgres connectiestring
-// (bv. gratis Postgres via Render, Railway of Supabase) — de rest van het schema blijft identiek.
+// Postgres via Neon (gratis, permanente opslag — in tegenstelling tot SQLite op Render's
+// gratis tier, wat bij elke deploy opnieuw begint omdat de schijf niet permanent is).
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
