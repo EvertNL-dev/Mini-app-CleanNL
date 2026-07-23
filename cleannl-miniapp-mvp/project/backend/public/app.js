@@ -41,6 +41,20 @@ function formatPrice(price, currency) {
   return new Intl.NumberFormat("nl-NL", { style: "currency", currency: currency || "EUR" }).format(price);
 }
 
+async function loadLogo() {
+  try {
+    const res = await fetch(`${API_BASE}/settings`);
+    const settings = await res.json();
+    if (settings.logoUrl) {
+      const logoImg = document.getElementById("logoImg");
+      logoImg.src = settings.logoUrl;
+      logoImg.classList.remove("hidden");
+    }
+  } catch (err) {
+    // Geen logo? Geen probleem, de tekst "Clean NL" blijft gewoon staan.
+  }
+}
+
 async function loadProducts() {
   try {
     const res = await fetch(`${API_BASE}/products`);
@@ -154,4 +168,5 @@ document.getElementById("contactBtn").onclick = () => {
   }
 };
 
+loadLogo();
 loadProducts();
